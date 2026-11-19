@@ -17,3 +17,8 @@ Pages 设置选择 GitHub Actions；推送 main 后工作流自动构建并发�
 
 ## 外部资料
 Word 内链接原样保留，外部文档内容及权限未核实。没有构造系统后台 SOP。
+
+## 第二轮展示组件
+src/components/Knowledge.tsx 包含 KeyTakeaway、RuleList、Timeline、StrategyComparison、CaseStudy、SourceDisclosure。
+原始票价由 source.json 直接驱动，不在 UI 手写票价。视觉 Token 位于 src/style.css 的 :root。
+可回退分支：codex/before-editorial-v2（第二轮修改前的 main）。
