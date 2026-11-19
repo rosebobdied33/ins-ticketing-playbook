@@ -22,3 +22,8 @@ Word 内链接原样保留，外部文档内容及权限未核实。没有构造
 src/components/Knowledge.tsx 包含 KeyTakeaway、RuleList、Timeline、StrategyComparison、CaseStudy、SourceDisclosure。
 原始票价由 source.json 直接驱动，不在 UI 手写票价。视觉 Token 位于 src/style.css 的 :root。
 可回退分支：codex/before-editorial-v2（第二轮修改前的 main）。
+
+## 第三轮信息设计
+src/components/Visuals.tsx 提供四类 Highlight、原则分组卡、票型时间轴、定价关系图、六步流程、案例数字 Banner。正文保留源依据，结构图先讲要点。
+首页有主按钮、次按钮、文字入口三层引导；页尾新增用户提供的飞书手册原文入口。
+可回退分支：codex/before-visual-v3。验收记录见 docs/CONTENT-AUDIT.md。
