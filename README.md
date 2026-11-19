@@ -27,3 +27,6 @@ src/components/Knowledge.tsx 包含 KeyTakeaway、RuleList、Timeline、Strategy
 src/components/Visuals.tsx 提供四类 Highlight、原则分组卡、票型时间轴、定价关系图、六步流程、案例数字 Banner。正文保留源依据，结构图先讲要点。
 首页有主按钮、次按钮、文字入口三层引导；页尾新增用户提供的飞书手册原文入口。
 可回退分支：codex/before-visual-v3。验收记录见 docs/CONTENT-AUDIT.md。
+
+## 第四轮知识中心
+采用暖白、黑灰与少量灰紫，统一六类知识组件；新增样式位于 src/handbook.css。完整设计参考、短文案来源和手机验收见 docs/NOTION-UI-AUDIT.md。回退分支：codex/before-notion-v4。
