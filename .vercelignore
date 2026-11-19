@@ -1,0 +1,9 @@
+.env*
+node_modules
+private-dist
+dist
+source
+screenshots
+upload-v2.json
+update-*.py
+.git

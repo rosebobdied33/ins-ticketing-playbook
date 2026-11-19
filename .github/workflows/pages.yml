@@ -1,22 +1,13 @@
-name: Deploy Pages
+name: Verify protected handbook
 on:
   push:
     branches: [main]
-  workflow_dispatch:
+  pull_request:
 permissions:
   contents: read
-  actions: read
-  pages: write
-  id-token: write
-concurrency:
-  group: pages
-  cancel-in-progress: true
 jobs:
-  deploy:
+  verify:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -24,31 +15,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm run build
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist
-          name: github-pages-${{ github.run_attempt }}
-      - name: Wait for uploaded artifact metadata
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          node --input-type=module <<'NODE'
-          const name = `github-pages-${process.env.GITHUB_RUN_ATTEMPT}`;
-          const url = `https://api.github.com/repos/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}/artifacts`;
-          for (let attempt = 0; attempt < 12; attempt++) {
-            const response = await fetch(url, {headers: {Authorization: `Bearer ${process.env.GH_TOKEN}`, Accept: 'application/vnd.github+json'}});
-            if (!response.ok) throw new Error(`Artifact lookup failed: ${response.status}`);
-            const {artifacts} = await response.json();
-            const matches = artifacts.filter(artifact => artifact.name === name && !artifact.expired);
-            if (matches.length === 1) { console.log(`Artifact ready: ${name}`); process.exit(0); }
-            if (matches.length > 1) throw new Error(`Ambiguous artifact: ${name}`);
-            await new Promise(resolve => setTimeout(resolve, 5000));
-          }
-          throw new Error(`Artifact metadata did not become available: ${name}`);
-          NODE
-      - id: deployment
-        uses: actions/deploy-pages@v4
-        with:
-          artifact_name: github-pages-${{ github.run_attempt }}
+      - run: node --test tests/auth.test.mjs tests/server.test.mjs
+      - run: node --experimental-strip-types --test tests/learning.test.ts
+      - run: npm run build:secure
+# Never publish dist to Pages: all handbook assets require server authentication.

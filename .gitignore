@@ -1,3 +1,7 @@
 node_modules/
 dist/
 source/
+
+.env*
+private-dist/
+.vercel/

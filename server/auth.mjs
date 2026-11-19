@@ -1,0 +1,6 @@
+import {scryptSync,timingSafeEqual,createHmac,randomBytes} from 'node:crypto';
+const equal=(a,b)=>{const x=Buffer.from(a),y=Buffer.from(b);return x.length===y.length&&timingSafeEqual(x,y)};
+export function credentialsMatch(username,password,c){try{const [salt,hash]=c.passwordHash.split(':');return equal(scryptSync(password,salt,64).toString('hex'),hash)&&equal(username,c.username)}catch{return false}}
+export function createSession(c,now=Math.floor(Date.now()/1000)){const payload=Buffer.from(JSON.stringify({sub:c.username,iat:now,exp:now+28800,nonce:randomBytes(16).toString('hex')})).toString('base64url');return payload+'.'+createHmac('sha256',c.sessionSecret).update(payload).digest('base64url')}
+export function verifySession(token,c,now=Math.floor(Date.now()/1000)){try{const [p,s,...extra]=token.split('.');if(extra.length||!equal(s,createHmac('sha256',c.sessionSecret).update(p).digest('base64url')))return false;const d=JSON.parse(Buffer.from(p,'base64url'));return d.sub===c.username&&d.iat<=now&&d.exp>now&&d.exp-d.iat===28800}catch{return false}}
+export function safeAssetPath(path){if(path==='/'||path==='/index.html')return 'index.html';return /^\/assets\/[\w-]+\.(js|css|svg|png|jpg|webp|woff2)$/.test(path)?path.slice(1):null}

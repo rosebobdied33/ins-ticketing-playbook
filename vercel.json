@@ -1,0 +1,1 @@
+{"framework":null,"buildCommand":"npm run build:secure","outputDirectory":"public","functions":{"api/handbook.js":{"includeFiles":"private-dist/**"}},"rewrites":[{"source":"/(.*)","destination":"/api/handbook"}]}

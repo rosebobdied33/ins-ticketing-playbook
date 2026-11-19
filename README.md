@@ -1,35 +1,29 @@
 # INS TICKETING PLAYBOOK
 
-React + Vite + TypeScript 静态知识手册。
+React + Vite + TypeScript 知识手册，Node 服务端统一账号登录。
 
 ## 开发与发布
-Node.js 22。首次 `npm ci`，开发 `npm run dev`，生产 `npm run build`。
-Pages 设置选择 GitHub Actions；推送 main 后工作流自动构建并发布。
-路径固定 `/ins-ticketing-playbook/`；章节使用 hash 路由，刷新无需服务器重写。
+Node.js 22；npm ci；npm run dev。生产运行 npm run build:secure，通过 Vercel Node Function 提供页面。
+生产配置由 vercel.json 管理。private-dist 仅进入函数包，public 为空，禁止把 dist 发布到 Pages 或任意公开静态目录。
+GitHub Actions 只运行测试与构建，不再发布未经认证的静态副本。
+
+服务端必需环境变量：HANDBOOK_USERNAME、HANDBOOK_PASSWORD_HASH、HANDBOOK_SESSION_SECRET。
+密码哈希格式为 salt:scrypt-hex（64 字节），签名密钥至少 32 字符；不在仓库中保存任何真实值。
+登录会话使用 HttpOnly / Secure / SameSite Cookie，有效 8 小时。所有正文、脚本、样式均须认证，响应禁止共享缓存。缺少配置时拒绝服务。
+登录失败限速为单个函数实例内的防滥用措施，不是跨实例分布式限流。
+本地认证预览：在被忽略的 .env.auth.local 配置变量后，node --env-file=.env.auth.local server/local.mjs。
 
 ## 内容维护
-- `src/content/chapters.ts`：六章导读、内容映射与待核对口径。
-- `src/content/source.json`：逐块原文与表格，ID 与原文依据绑定。修改规则须同步更新原文来源与导读，不把历史价格改为现行价。
-- `src/main.tsx`：阅读、搜索、进度、来源展示与图片文字转录。
-- `docs/CONTENT-AUDIT.md`：内容疑点和核对范围。
-新增案例应写清年份、问题、策略、结果、缺陷，并关联来源块。
-更新日期仅代表网站整理日期，不代表业务审批日期。
+src/content/source.json 是逐块原文与表格的唯一事实来源。历史价格不改为现行价格；所有原文疑点保留。
+src/components/StrategyModules.tsx 整理票型、优惠、分级定价与库存应对；原始规则可按来源展开核对。
+src/responsive.css 提供宽屏并排布局；src/strategy-modules.css 提供分组与条件动作模块。
+飞书外链需要其自身的访问权限，不由本站账号管理。
 
-## 外部资料
-Word 内链接原样保留，外部文档内容及权限未核实。没有构造系统后台 SOP。
+## 验证
+node --test tests/auth.test.mjs tests/server.test.mjs
+node --experimental-strip-types --test tests/learning.test.ts
+npm run build:secure
 
-## 第二轮展示组件
-src/components/Knowledge.tsx 包含 KeyTakeaway、RuleList、Timeline、StrategyComparison、CaseStudy、SourceDisclosure。
-原始票价由 source.json 直接驱动，不在 UI 手写票价。视觉 Token 位于 src/style.css 的 :root。
-可回退分支：codex/before-editorial-v2（第二轮修改前的 main）。
-
-## 第三轮信息设计
-src/components/Visuals.tsx 提供四类 Highlight、原则分组卡、票型时间轴、定价关系图、六步流程、案例数字 Banner。正文保留源依据，结构图先讲要点。
-首页有主按钮、次按钮、文字入口三层引导；页尾新增用户提供的飞书手册原文入口。
-可回退分支：codex/before-visual-v3。验收记录见 docs/CONTENT-AUDIT.md。
-
-## 第四轮知识中心
-采用暖白、黑灰与少量灰紫，统一六类知识组件；新增样式位于 src/handbook.css。完整设计参考、短文案来源和手机验收见 docs/NOTION-UI-AUDIT.md。回退分支：codex/before-notion-v4。
-
-## 第五轮视觉教辅
-经营守则采用渐变封面、十条图解和重点标记；Learning.tsx 提供自测、活动分支与对称翻页。验收与来源记录见 docs/VISUAL-LEARNING-AUDIT.md。测试命令：node --experimental-strip-types --test tests/learning.test.ts。
+## 历史记录
+内容核对见 docs/CONTENT-AUDIT.md；视觉版本记录见 docs/NOTION-UI-AUDIT.md、docs/VISUAL-LEARNING-AUDIT.md。
+第六轮记录见 docs/RESPONSIVE-AUTH-AUDIT.md。
