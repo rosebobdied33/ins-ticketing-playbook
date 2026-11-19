@@ -28,5 +28,26 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
+          name: github-pages-${{ github.run_attempt }}
+      - name: Wait for uploaded artifact metadata
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          node --input-type=module <<'NODE'
+          const name = `github-pages-${process.env.GITHUB_RUN_ATTEMPT}`;
+          const url = `https://api.github.com/repos/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}/artifacts`;
+          for (let attempt = 0; attempt < 12; attempt++) {
+            const response = await fetch(url, {headers: {Authorization: `Bearer ${process.env.GH_TOKEN}`, Accept: 'application/vnd.github+json'}});
+            if (!response.ok) throw new Error(`Artifact lookup failed: ${response.status}`);
+            const {artifacts} = await response.json();
+            const matches = artifacts.filter(artifact => artifact.name === name && !artifact.expired);
+            if (matches.length === 1) { console.log(`Artifact ready: ${name}`); process.exit(0); }
+            if (matches.length > 1) throw new Error(`Ambiguous artifact: ${name}`);
+            await new Promise(resolve => setTimeout(resolve, 5000));
+          }
+          throw new Error(`Artifact metadata did not become available: ${name}`);
+          NODE
       - id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          artifact_name: github-pages-${{ github.run_attempt }}
