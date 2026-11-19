@@ -30,3 +30,6 @@ src/components/Visuals.tsx 提供四类 Highlight、原则分组卡、票型时�
 
 ## 第四轮知识中心
 采用暖白、黑灰与少量灰紫，统一六类知识组件；新增样式位于 src/handbook.css。完整设计参考、短文案来源和手机验收见 docs/NOTION-UI-AUDIT.md。回退分支：codex/before-notion-v4。
+
+## 第五轮视觉教辅
+经营守则采用渐变封面、十条图解和重点标记；Learning.tsx 提供自测、活动分支与对称翻页。验收与来源记录见 docs/VISUAL-LEARNING-AUDIT.md。测试命令：node --experimental-strip-types --test tests/learning.test.ts。
