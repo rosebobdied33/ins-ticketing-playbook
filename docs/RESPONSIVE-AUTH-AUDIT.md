@@ -20,3 +20,6 @@ S 级 115% 区间重叠及常规联票价格冲突保留待核对；不混用整
 认证单元与 HTTP 集成测试 4 项通过；学习导航测试 2 项通过；TypeScript 与生产构建通过。
 390px 六章无横向溢出；1440px 检查首页、守则、时间轴与 B 级方案。截图在 screenshots/v6。
 实际线上状态须以部署验收为准，不能把本地验证当作已上线。
+
+## 线上验证
+生产地址：https://ins-ticketing-playbook.vercel.app/。匿名首页只显示登录，正确凭据可读取页面和资源；匿名脚本与样式为 401，退出后 Cookie 清空；原 Pages 首页及旧脚本、公开仓库和原文 raw URL 均为 404。生产使用 Secure Cookie，no-store 响应。

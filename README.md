@@ -4,7 +4,7 @@ React + Vite + TypeScript 知识手册，Node 服务端统一账号登录。
 
 ## 开发与发布
 Node.js 22；npm ci；npm run dev。生产运行 npm run build:secure，通过 Vercel Node Function 提供页面。
-生产配置由 vercel.json 管理。private-dist 仅进入函数包，public 为空，禁止把 dist 发布到 Pages 或任意公开静态目录。
+生产配置由 vercel.json 管理。private-dist 仅进入函数包，public 仅含禁止索引的 robots.txt，禁止把 dist 发布到 Pages 或任意公开静态目录。
 GitHub Actions 只运行测试与构建，不再发布未经认证的静态副本。
 
 服务端必需环境变量：HANDBOOK_USERNAME、HANDBOOK_PASSWORD_HASH、HANDBOOK_SESSION_SECRET。
@@ -27,3 +27,4 @@ npm run build:secure
 ## 历史记录
 内容核对见 docs/CONTENT-AUDIT.md；视觉版本记录见 docs/NOTION-UI-AUDIT.md、docs/VISUAL-LEARNING-AUDIT.md。
 第六轮记录见 docs/RESPONSIVE-AUTH-AUDIT.md。
+
