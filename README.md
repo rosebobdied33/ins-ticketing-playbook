@@ -2,6 +2,9 @@
 
 React + Vite + TypeScript 票务知识手册，发布于 GitHub Pages。
 
+## 在线阅读
+https://rosebobdied33.github.io/ins-ticketing-playbook/
+
 ## 本地开发与构建
 - Node.js 22
 - `npm ci`
